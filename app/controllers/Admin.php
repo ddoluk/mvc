@@ -6,7 +6,7 @@ class Admin extends Controller
     {
         parent::__construct();
 
-        if(!isset($_SESSION['login']) && @$_SESSION['login'] != 'admin'){
+        if(!isset($_SESSION['login'])){
 
             $this->view->render('error/403','layout');
 
