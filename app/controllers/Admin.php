@@ -2,13 +2,21 @@
 
 class Admin extends Controller
 {
+    private $model;
+
     public function __construct()
     {
         parent::__construct();
 
-        if(!isset($_SESSION['login'])){
+        if (!isset($_SESSION['login'])) {
 
-            $this->view->render('error/403','layout');
+            $this->view->render('error/403', 'layout');
+
+            exit();
+
+        } else {
+
+            $this->model = new memberModel();
 
         }
 
@@ -17,9 +25,7 @@ class Admin extends Controller
     public function dashboard()
     {
 
-        $model = new memberModel();
-
-        $data = $model->read();
+        $data = $this->model->read();
 
         $this->view->render('admin/dashboard', 'layout', $data);
 
@@ -36,9 +42,7 @@ class Admin extends Controller
     public function save()
     {
 
-        $model = new memberModel();
-
-        $model->create($_POST);
+        $this->model->create($_POST);
 
         $this->redirect->redirectTo('/admin/dashboard');
 
@@ -46,9 +50,7 @@ class Admin extends Controller
 
     public function edit()
     {
-        $model = new memberModel();
-
-        $data = $model->edit($_POST['edit_id']);
+        $data = $this->model->edit($_POST['edit_id']);
 
         $this->view->render('admin/editor/edit', 'layout', $data);
 
@@ -56,9 +58,8 @@ class Admin extends Controller
 
     public function update()
     {
-        $model = new memberModel();
 
-        $model->update($_POST);
+        $this->model->update($_POST);
 
         $this->redirect->redirectTo('/admin/dashboard');
 
@@ -67,9 +68,7 @@ class Admin extends Controller
     public function delete()
     {
 
-        $model = new memberModel();
-
-        $model->delete($_POST['member_id']);
+        $this->model->delete($_POST['member_id']);
 
         $this->redirect->redirectTo('/admin/dashboard');
 
